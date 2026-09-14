@@ -23,7 +23,7 @@ def inyectar_estilos():
         }}
 
         /* ==========================================================
-           1. SIDEBAR PROFESIONAL Y FIJA
+           1. SIDEBAR PROFESIONAL
            ========================================================== */
         section[data-testid="stSidebar"] {{
             background: linear-gradient(180deg, {COLORS['azul_profundo']} 0%, #061E38 100%);
@@ -79,12 +79,16 @@ def inyectar_estilos():
         }}
 
         /* ==========================================================
-           3. CORRECCIÓN DE ETIQUETAS Y CAMPOS DE TEXTO EN LOGIN
+           3. ETIQUETAS Y CAMPOS DE TEXTO EN LOGIN
            ========================================================== */
-        /* Forzar que las etiquetas dentro de los formularios y tarjetas tengan color oscuro legible */
-        div[data-testid="stForm"] label p, div[data-testid="stForm"] label span, div[data-testid="stForm"] label {{
-            color: {COLORS['texto_oscuro']} !important;
-            font-weight: 600 !important;
+        /* Forzar color oscuro altamente visible en los labels del formulario */
+        div[data-testid="stForm"] label p, 
+        div[data-testid="stForm"] label span, 
+        div[data-testid="stForm"] label,
+        .stForm label {{
+            color: #0F172A !important;
+            font-weight: 700 !important;
+            font-size: 14px !important;
         }}
 
         .stTextInput input, .stNumberInput input, .stTextArea textarea {{
