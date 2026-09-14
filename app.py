@@ -10,7 +10,6 @@ from services.auth_service import AuthService, AuthError
 from pages_ui.estilos import inyectar_estilos, banner_institucional
 from pages_ui import dashboard, inventario, usuarios, ventas, pagos, reportes
 
-# Forzamos la barra lateral a iniciar expandida para que nunca desaparezca sola
 st.set_page_config(page_title=APP_NAME, page_icon="🚌", layout="wide", initial_sidebar_state="expanded")
 inyectar_estilos()
 
@@ -55,7 +54,7 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
-    # Fondo con gradiente profesional y tarjeta centrada limpia
+    # Fondo con gradiente profesional inmersivo
     st.markdown(
         f"""
         <style>
@@ -67,20 +66,21 @@ def _pantalla_login():
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 8vh;'></div>", unsafe_allow_html=True)
     _, col_centro, _ = st.columns([1, 1.15, 1])
     
     with col_centro:
+        # Tarjeta de login moderna y limpia sin bordes raros
         st.markdown(
             f"""
             <div style="
                 background: #FFFFFF;
-                padding: 50px 45px;
+                padding: 45px 40px;
                 border-radius: 20px;
                 box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
                 border-top: 6px solid {COLORS['celeste']};
             ">
-            <div style="text-align: center; margin-bottom: 30px;">
+            <div style="text-align: center; margin-bottom: 25px;">
                 <h2 style='color:{COLORS['azul_profundo']}; margin: 0; font-weight: 800; font-size: 26px; letter-spacing: -0.5px;'>Transur 7 de Mayo</h2>
                 <p style='color:#64748B; font-size: 14px; margin: 6px 0 0 0; font-weight: 500;'>Plataforma Integral de Repuestos</p>
             </div>
@@ -149,11 +149,12 @@ def _sidebar():
 
 
 def main():
+    # Si el usuario NO ha iniciado sesión, mostramos el login
     if st.session_state["usuario"] is None:
         _pantalla_login()
         return
 
-    # Renderizamos la barra lateral fija al estar logueado
+    # Si ya inició sesión, renderizamos explícitamente el sidebar en primer lugar
     _sidebar()
     banner_institucional()
 
