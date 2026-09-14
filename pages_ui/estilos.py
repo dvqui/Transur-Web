@@ -1,4 +1,4 @@
-"""CSS institucional inyectado en la app (paleta azul/blanco/rojo/celeste con tipografía moderna)."""
+"""CSS institucional inyectado en la app (paleta azul/blanco/rojo/celeste)."""
 import streamlit as st
 from config import COLORS
 
@@ -7,7 +7,6 @@ def inyectar_estilos():
     st.markdown(
         f"""
         <style>
-        /* Importar tipografía moderna de Google Fonts (Plus Jakarta Sans) */
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
         #MainMenu {{visibility: hidden;}}
@@ -19,13 +18,12 @@ def inyectar_estilos():
             font-family: 'Plus Jakarta Sans', sans-serif, -apple-system;
         }}
 
-        /* Forzar tipografía en todos los elementos de texto */
         html, body, [class*="css"] {{
             font-family: 'Plus Jakarta Sans', sans-serif, -apple-system;
         }}
 
         /* ==========================================================
-           1. SIDEBAR PROFESIONAL
+           1. SIDEBAR PROFESIONAL Y FIJA
            ========================================================== */
         section[data-testid="stSidebar"] {{
             background: linear-gradient(180deg, {COLORS['azul_profundo']} 0%, #061E38 100%);
@@ -75,21 +73,18 @@ def inyectar_estilos():
             box-shadow: 0 6px 16px rgba(11, 61, 102, 0.3) !important;
         }}
 
-        /* Botón secundario de peligro (Eliminar) */
         .stMainBlockContainer div.stButton > button[kind="secondary"] {{
             background: linear-gradient(135deg, {COLORS['rojo']} 0%, {COLORS['rojo_hover']} 100%) !important;
             box-shadow: 0 4px 12px rgba(215, 38, 61, 0.2) !important;
         }}
 
         /* ==========================================================
-           3. CAMPOS DE ENTRADA Y TARJETAS
+           3. CORRECCIÓN DE ETIQUETAS Y CAMPOS DE TEXTO EN LOGIN
            ========================================================== */
-        .transur-card {{
-            background-color: {COLORS['blanco']};
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+        /* Forzar que las etiquetas dentro de los formularios y tarjetas tengan color oscuro legible */
+        div[data-testid="stForm"] label p, div[data-testid="stForm"] label span, div[data-testid="stForm"] label {{
+            color: {COLORS['texto_oscuro']} !important;
+            font-weight: 600 !important;
         }}
 
         .stTextInput input, .stNumberInput input, .stTextArea textarea {{
