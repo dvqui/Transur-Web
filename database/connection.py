@@ -30,9 +30,8 @@ def _obtener_url_conexion() -> str:
     return url
 
 
-@st.cache_resource(show_spinner=False)
 def obtener_conexion():
-    """Conexión reutilizada durante la vida de la app (cacheada por Streamlit)."""
+    """Conexión nueva y fresca bajo demanda (SIN CACHÉ)."""
     url = _obtener_url_conexion()
     conn = psycopg2.connect(url, sslmode="require")
     conn.autocommit = True
@@ -41,42 +40,63 @@ def obtener_conexion():
 
 def ejecutar(query: str, params: tuple = ()):
     conn = obtener_conexion()
-    with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(query, params)
-        return cur
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(query, params)
+    finally:
+        if conn:
+            conn.close()
 
 
 def ejecutar_retornando(query: str, params: tuple = ()):
     """Para INSERT ... RETURNING id, útil para obtener el id autogenerado."""
     conn = obtener_conexion()
-    with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(query, params)
-        return cur.fetchone()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(query, params)
+            return cur.fetchone()
+    finally:
+        if conn:
+            conn.close()
 
 
 def consultar(query: str, params: tuple = ()) -> list:
     conn = obtener_conexion()
-    with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(query, params)
-        return cur.fetchall()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(query, params)
+            return cur.fetchall()
+    finally:
+        if conn:
+            conn.close()
 
 
 def consultar_uno(query: str, params: tuple = ()):
     conn = obtener_conexion()
-    with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(query, params)
-        return cur.fetchone()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(query, params)
+            return cur.fetchone()
+    finally:
+        if conn:
+            conn.close()
 
 
 @st.cache_resource(show_spinner=False)
 def inicializar_bd():
     """Crea el esquema (si no existe) y siembra los datos base. Se ejecuta
     una sola vez por instancia de la app gracias al cache_resource."""
+    
+    # Bloque aislado para crear el esquema
     conn = obtener_conexion()
-    with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-        schema_sql = f.read()
-    with conn.cursor() as cur:
-        cur.execute(schema_sql)
+    try:
+        with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
+            schema_sql = f.read()
+        with conn.cursor() as cur:
+            cur.execute(schema_sql)
+    finally:
+        if conn:
+            conn.close()
 
     # --- Sembrar roles ---------------------------------------------------
     for rol, desc in [
