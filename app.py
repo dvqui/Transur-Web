@@ -54,55 +54,52 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
-    # Centrado vertical limpio sin bloques blancos extraños
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    col_izq, col_centro, col_der = st.columns([1, 1.1, 1])
+    banner_institucional("Inicio de sesión")
+    col_izq, col_centro, col_der = st.columns([1, 1.2, 1])
     with col_centro:
-        # Contenedor unificado de login
-        with st.container():
-            st.markdown(
-                f"""<div class="transur-card" style="text-align:center; padding: 35px 30px;
-                border-top: 5px solid {COLORS['azul_profundo']};">""",
-                unsafe_allow_html=True,
-            )
-            try:
-                st.image(LOGO_PATH, width=90)
-            except Exception:
-                st.markdown("### 🚌")
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(
+            f"""<div class="transur-card" style="text-align:center;padding:40px 30px;
+            border-top: 6px solid {COLORS['azul_profundo']};">""",
+            unsafe_allow_html=True,
+        )
+        try:
+            st.image(LOGO_PATH, width=110)
+        except Exception:
+            st.markdown("### 🚌")
 
-            st.markdown(
-                "<h3 style='color:#0B3D66; margin: 10px 0 0 0; font-weight: 700;'>Transur 7 de Mayo</h3>"
-                "<p style='color:#5A6B7B; font-size: 13px; margin-bottom: 20px;'>Sistema de Gestión de Repuestos</p>",
-                unsafe_allow_html=True,
-            )
+        st.markdown(
+            "<h2 style='color:#0B3D66;margin-bottom:0;'>Transur 7 de Mayo</h2>"
+            "<p style='color:#5A6B7B;margin-top:2px;'>Sistema de Gestión de Repuestos</p>",
+            unsafe_allow_html=True,
+        )
 
-            with st.form("form_login"):
-                usuario_input = st.text_input("Usuario")
-                password_input = st.text_input("Contraseña", type="password")
-                st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
-                enviar = st.form_submit_button("Iniciar Sesión", use_container_width=True)
+        with st.form("form_login"):
+            usuario_input = st.text_input("Usuario")
+            password_input = st.text_input("Contraseña", type="password")
+            enviar = st.form_submit_button("Iniciar Sesión", use_container_width=True)
 
-            if enviar:
-                if not usuario_input or not password_input:
-                    st.error("Por favor complete usuario y contraseña.")
-                else:
-                    try:
-                        auth = AuthService()
-                        datos = auth.login(usuario_input.strip(), password_input)
-                        st.session_state["usuario"] = datos
-                        st.rerun()
-                    except AuthError as e:
-                        st.error(str(e))
+        if enviar:
+            if not usuario_input or not password_input:
+                st.error("Por favor complete usuario y contraseña.")
+            else:
+                try:
+                    auth = AuthService()
+                    datos = auth.login(usuario_input.strip(), password_input)
+                    st.session_state["usuario"] = datos
+                    st.rerun()
+                except AuthError as e:
+                    st.error(str(e))
 
-            st.markdown("</div>", unsafe_allow_html=True)
+        st.caption("Usuario por defecto: admin / admin123")
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
 def _sidebar():
     usuario = st.session_state["usuario"]
     with st.sidebar:
         try:
-            st.image(LOGO_PATH, width=70)
+            st.image(LOGO_PATH, width=80)
         except Exception:
             pass
         st.markdown(f"### Transur 7 de Mayo")
@@ -158,6 +155,7 @@ def main():
     }
     render_fn = paginas.get(st.session_state["pagina"], dashboard.render)
 
+    # Protección de rutas restringidas a Administrador (por si se manipula el estado)
     if st.session_state["pagina"] in ("usuarios", "reportes") and st.session_state["usuario"]["rol"] != "Administrador":
         st.warning("No tienes permisos para ver esta sección.")
         st.session_state["pagina"] = "dashboard"
