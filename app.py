@@ -4,10 +4,10 @@ Versión web (Streamlit + PostgreSQL/Neon).
 """
 import streamlit as st
 
-from config import APP_NAME, LOGO_PATH
+from config import APP_NAME, LOGO_PATH, COLORS
 from database.connection import inicializar_bd
 from services.auth_service import AuthService, AuthError
-from pages_ui.estilos import inyectar_estilos
+from pages_ui.estilos import inyectar_estilos, banner_institucional
 from pages_ui import dashboard, inventario, usuarios, ventas, pagos, reportes
 
 st.set_page_config(page_title=APP_NAME, page_icon="🚌", layout="wide")
@@ -54,11 +54,13 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
+    banner_institucional("Inicio de sesión")
     col_izq, col_centro, col_der = st.columns([1, 1.2, 1])
     with col_centro:
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown(
-            """<div class="transur-card" style="text-align:center;padding:40px 30px;">""",
+            f"""<div class="transur-card" style="text-align:center;padding:40px 30px;
+            border-top: 6px solid {COLORS['azul_profundo']};">""",
             unsafe_allow_html=True,
         )
         try:
@@ -138,6 +140,7 @@ def main():
         return
 
     _sidebar()
+    banner_institucional()
 
     if st.session_state["usuario"].get("requiere_cambio_pwd"):
         _dialogo_cambiar_password(obligatorio=True)
