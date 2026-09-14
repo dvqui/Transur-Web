@@ -104,7 +104,7 @@ def banner_institucional(subtitulo: str = "Sistema de Gestión de Repuestos"):
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: {('none' if subtirulo == 'Inicio de sesión' else '0 4px 12px rgba(11,61,102,0.15)')};
+            box-shadow: {('none' if subtitulo == 'Inicio de sesión' else '0 4px 12px rgba(11,61,102,0.15)')};
         ">
             <div style="display: flex; align-items: baseline; gap: 12px;">
                 <span style="color:#FFFFFF; font-size:20px; font-weight:800;">🚍 Transur 7 de Mayo</span>
