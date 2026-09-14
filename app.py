@@ -54,7 +54,7 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
-    # Fondo con gradiente profesional para la pantalla de autenticación
+    # Fondo con gradiente profesional y sin textos duplicados ni logos
     st.markdown(
         f"""
         <style>
@@ -66,7 +66,7 @@ def _pantalla_login():
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='height: 6vh;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 10vh;'></div>", unsafe_allow_html=True)
     _, col_centro, _ = st.columns([1, 1.15, 1])
     
     with col_centro:
@@ -74,36 +74,23 @@ def _pantalla_login():
             f"""
             <div style="
                 background: #FFFFFF;
-                padding: 45px 40px;
+                padding: 50px 45px;
                 border-radius: 20px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
                 border-top: 6px solid {COLORS['celeste']};
             ">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style='color:{COLORS['azul_profundo']}; margin: 0; font-weight: 800; font-size: 26px; letter-spacing: -0.5px;'>Transur 7 de Mayo</h2>
+                <p style='color:#64748B; font-size: 14px; margin: 6px 0 0 0; font-weight: 500;'>Plataforma Integral de Repuestos</p>
+            </div>
             """,
             unsafe_allow_html=True,
         )
 
-        cols_header = st.columns([1, 3.5])
-        with cols_header[0]:
-            try:
-                st.image(LOGO_PATH, width=70)
-            except Exception:
-                st.markdown("### 🚌")
-        with cols_header[1]:
-            st.markdown(
-                f"""
-                <h3 style='color:{COLORS['azul_profundo']}; margin: 0; font-weight: 800; font-size: 22px;'>Transur 7 de Mayo</h3>
-                <p style='color:#64748B; font-size: 13px; margin: 2px 0 0 0; font-weight: 500;'>Plataforma Integral de Repuestos</p>
-                """,
-                unsafe_allow_html=True,
-            )
-
-        st.markdown("<hr style='margin: 24px 0; border: none; border-top: 1px solid #E2E8F0;'>", unsafe_allow_html=True)
-
         with st.form("form_login"):
             usuario_input = st.text_input("Usuario de acceso")
             password_input = st.text_input("Contraseña", type="password")
-            st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
             enviar = st.form_submit_button("Iniciar Sesión", use_container_width=True)
 
         if enviar:
@@ -119,51 +106,6 @@ def _pantalla_login():
                     st.error(str(e))
 
         st.markdown("</div>", unsafe_allow_html=True)
-    # Creamos columnas para centrar la tarjeta de forma milimétrica en cualquier pantalla
-    _, col_centro, _ = st.columns([1, 1.2, 1])
-    
-    with col_centro:
-        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
-
-        # Encabezado con Logo y Títulos integrados simétricamente
-        cols_logo = st.columns([1, 3])
-        with cols_logo[0]:
-            try:
-                st.image(LOGO_PATH, width=65)
-            except Exception:
-                st.markdown("### 🚌")
-        with cols_logo[1]:
-            st.markdown(
-                f"""
-                <h4 style='color:{COLORS['azul_profundo']}; margin: 0; font-weight: 800; line-height: 1.2;'>Transur 7 de Mayo</h4>
-                <p style='color:#5A6B7B; font-size: 12px; margin: 0;'>Gestión de Repuestos</p>
-                """,
-                unsafe_allow_html=True,
-            )
-
-        st.markdown("<hr style='margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;'>", unsafe_allow_html=True)
-
-        # Formulario limpio de acceso
-        with st.form("form_login"):
-            usuario_input = st.text_input("Usuario de acceso")
-            password_input = st.text_input("Contraseña", type="password")
-            st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
-            enviar = st.form_submit_button("Iniciar Sesión", use_container_width=True)
-
-        if enviar:
-            if not usuario_input or not password_input:
-                st.error("Por favor complete usuario y contraseña.")
-            else:
-                try:
-                    auth = AuthService()
-                    datos = auth.login(usuario_input.strip(), password_input)
-                    st.session_state["usuario"] = datos
-                    st.rerun()
-                except AuthError as e:
-                    st.error(str(e))
-
-        st.markdown('</div>', unsafe_allow_html=True)
 
 
 def _sidebar():
