@@ -10,7 +10,7 @@ from services.auth_service import AuthService, AuthError
 from pages_ui.estilos import inyectar_estilos, banner_institucional
 from pages_ui import dashboard, inventario, usuarios, ventas, pagos, reportes
 
-st.set_page_config(page_title=APP_NAME, page_icon="🚌", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title=APP_NAME, page_icon="🚌", layout="wide")
 inyectar_estilos()
 
 # --- Inicializa el esquema y datos base en Neon (una sola vez) -----------------
@@ -54,44 +54,29 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
-    # Fondo con gradiente profesional inmersivo
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background: linear-gradient(135deg, {COLORS['azul_profundo']} 0%, #061E38 100%) !important;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("<div style='height: 8vh;'></div>", unsafe_allow_html=True)
-    _, col_centro, _ = st.columns([1, 1.15, 1])
-    
+    banner_institucional("Inicio de sesión")
+    col_izq, col_centro, col_der = st.columns([1, 1.2, 1])
     with col_centro:
-        # Tarjeta de login moderna y limpia sin bordes raros
+        st.markdown("<br>", unsafe_allow_html=True)
         st.markdown(
-            f"""
-            <div style="
-                background: #FFFFFF;
-                padding: 45px 40px;
-                border-radius: 20px;
-                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-                border-top: 6px solid {COLORS['celeste']};
-            ">
-            <div style="text-align: center; margin-bottom: 25px;">
-                <h2 style='color:{COLORS['azul_profundo']}; margin: 0; font-weight: 800; font-size: 26px; letter-spacing: -0.5px;'>Transur 7 de Mayo</h2>
-                <p style='color:#64748B; font-size: 14px; margin: 6px 0 0 0; font-weight: 500;'>Plataforma Integral de Repuestos</p>
-            </div>
-            """,
+            f"""<div class="transur-card" style="text-align:center;padding:40px 30px;
+            border-top: 6px solid {COLORS['azul_profundo']};">""",
+            unsafe_allow_html=True,
+        )
+        try:
+            st.image(LOGO_PATH, width=110)
+        except Exception:
+            st.markdown("### 🚌")
+
+        st.markdown(
+            "<h2 style='color:#0B3D66;margin-bottom:0;'>Transur 7 de Mayo</h2>"
+            "<p style='color:#5A6B7B;margin-top:2px;'>Sistema de Gestión de Repuestos</p>",
             unsafe_allow_html=True,
         )
 
         with st.form("form_login"):
-            usuario_input = st.text_input("Usuario de acceso")
+            usuario_input = st.text_input("Usuario")
             password_input = st.text_input("Contraseña", type="password")
-            st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
             enviar = st.form_submit_button("Iniciar Sesión", use_container_width=True)
 
         if enviar:
@@ -113,7 +98,7 @@ def _sidebar():
     usuario = st.session_state["usuario"]
     with st.sidebar:
         try:
-            st.image(LOGO_PATH, width=70)
+            st.image(LOGO_PATH, width=80)
         except Exception:
             pass
         st.markdown(f"### Transur 7 de Mayo")
@@ -149,12 +134,10 @@ def _sidebar():
 
 
 def main():
-    # Si el usuario NO ha iniciado sesión, mostramos el login
     if st.session_state["usuario"] is None:
         _pantalla_login()
         return
 
-    # Si ya inició sesión, renderizamos explícitamente el sidebar en primer lugar
     _sidebar()
     banner_institucional()
 
