@@ -83,9 +83,41 @@ def inyectar_estilos():
             font-weight: 600;
         }}
 
-        /* Inputs */
-        .stTextInput input, .stNumberInput input, .stSelectbox div[data-baseweb="select"] {{
-            border-radius: 8px;
+        /* Inputs: forzar fondo blanco y texto oscuro sin importar el modo
+           oscuro del navegador/sistema operativo del usuario */
+        .stTextInput input, .stNumberInput input, .stTextArea textarea {{
+            background-color: {COLORS['blanco']} !important;
+            color: {COLORS['texto_oscuro']} !important;
+            border: 1px solid {COLORS['gris_borde']} !important;
+            border-radius: 8px !important;
+        }}
+        .stTextInput input::placeholder, .stTextArea textarea::placeholder {{
+            color: #9AA6B2 !important;
+        }}
+        div[data-baseweb="select"] > div {{
+            background-color: {COLORS['blanco']} !important;
+            color: {COLORS['texto_oscuro']} !important;
+            border: 1px solid {COLORS['gris_borde']} !important;
+            border-radius: 8px !important;
+        }}
+        div[data-baseweb="popover"] {{
+            background-color: {COLORS['blanco']} !important;
+        }}
+        ul[data-testid="stSelectboxVirtualDropdown"] {{
+            background-color: {COLORS['blanco']} !important;
+        }}
+        ul[data-testid="stSelectboxVirtualDropdown"] li {{
+            color: {COLORS['texto_oscuro']} !important;
+        }}
+
+        /* Etiquetas de los campos (fuera del sidebar, que ya se fuerza a blanco) */
+        .stApp label, .stApp p, .stApp span, .stApp .stMarkdown {{
+            color: {COLORS['texto_oscuro']};
+        }}
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] span {{
+            color: {COLORS['blanco']} !important;
         }}
         </style>
         """,
