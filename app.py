@@ -54,33 +54,60 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
-    # Espaciado superior para centrar elegantemente la tarjeta en la pantalla
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # Inyectamos estilos específicos para centrar y estructurar el login como tarjeta tipo SaaS
+    st.markdown(
+        f"""
+        <style>
+        .login-wrapper {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }}
+        .login-card {{
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(11, 61, 102, 0.08);
+            border: 1px solid {COLORS['gris_borde']};
+            width: 100%;
+            max-width: 440px;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Creamos columnas para centrar la tarjeta de forma milimétrica en cualquier pantalla
+    _, col_centro, _ = st.columns([1, 1.2, 1])
     
-    col_izq, col_centro, col_der = st.columns([1, 1.1, 1])
     with col_centro:
-        st.markdown(
-            f"""<div class="transur-card" style="text-align:center; padding: 45px 35px;
-            border-top: 6px solid {COLORS['azul_profundo']};">""",
-            unsafe_allow_html=True,
-        )
-        try:
-            st.image(LOGO_PATH, width=100)
-        except Exception:
-            st.markdown("### 🚌")
+        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+        st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
-        st.markdown(
-            "<h2 style='color:#0B3D66; margin-bottom: 0; font-weight: 800;'>Transur 7 de Mayo</h2>"
-            "<p style='color:#5A6B7B; margin-top: 4px; font-size: 14px; font-weight: 500;'>Sistema de Gestión de Repuestos</p>",
-            unsafe_allow_html=True,
-        )
+        # Encabezado con Logo y Títulos integrados simétricamente
+        cols_logo = st.columns([1, 3])
+        with cols_logo[0]:
+            try:
+                st.image(LOGO_PATH, width=65)
+            except Exception:
+                st.markdown("### 🚌")
+        with cols_logo[1]:
+            st.markdown(
+                f"""
+                <h4 style='color:{COLORS['azul_profundo']}; margin: 0; font-weight: 800; line-height: 1.2;'>Transur 7 de Mayo</h4>
+                <p style='color:#5A6B7B; font-size: 12px; margin: 0;'>Gestión de Repuestos</p>
+                """,
+                unsafe_allow_html=True,
+            )
 
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<hr style='margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;'>", unsafe_allow_html=True)
 
+        # Formulario limpio de acceso
         with st.form("form_login"):
-            usuario_input = st.text_input("Usuario")
+            usuario_input = st.text_input("Usuario de acceso")
             password_input = st.text_input("Contraseña", type="password")
-            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
             enviar = st.form_submit_button("Iniciar Sesión", use_container_width=True)
 
         if enviar:
@@ -95,7 +122,7 @@ def _pantalla_login():
                 except AuthError as e:
                     st.error(str(e))
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 def _sidebar():
@@ -158,7 +185,6 @@ def main():
     }
     render_fn = paginas.get(st.session_state["pagina"], dashboard.render)
 
-    # Protección de rutas restringidas a Administrador (por si se manipula el estado)
     if st.session_state["pagina"] in ("usuarios", "reportes") and st.session_state["usuario"]["rol"] != "Administrador":
         st.warning("No tienes permisos para ver esta sección.")
         st.session_state["pagina"] = "dashboard"
