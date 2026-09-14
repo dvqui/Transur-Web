@@ -54,30 +54,71 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
-    # Inyectamos estilos específicos para centrar y estructurar el login como tarjeta tipo SaaS
+    # Fondo con gradiente profesional para la pantalla de autenticación
     st.markdown(
         f"""
         <style>
-        .login-wrapper {{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 80vh;
-        }}
-        .login-card {{
-            background: #FFFFFF;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(11, 61, 102, 0.08);
-            border: 1px solid {COLORS['gris_borde']};
-            width: 100%;
-            max-width: 440px;
+        .stApp {{
+            background: linear-gradient(135deg, {COLORS['azul_profundo']} 0%, #061E38 100%) !important;
         }}
         </style>
         """,
         unsafe_allow_html=True,
     )
 
+    st.markdown("<div style='height: 6vh;'></div>", unsafe_allow_html=True)
+    _, col_centro, _ = st.columns([1, 1.15, 1])
+    
+    with col_centro:
+        st.markdown(
+            f"""
+            <div style="
+                background: #FFFFFF;
+                padding: 45px 40px;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                border-top: 6px solid {COLORS['celeste']};
+            ">
+            """,
+            unsafe_allow_html=True,
+        )
+
+        cols_header = st.columns([1, 3.5])
+        with cols_header[0]:
+            try:
+                st.image(LOGO_PATH, width=70)
+            except Exception:
+                st.markdown("### 🚌")
+        with cols_header[1]:
+            st.markdown(
+                f"""
+                <h3 style='color:{COLORS['azul_profundo']}; margin: 0; font-weight: 800; font-size: 22px;'>Transur 7 de Mayo</h3>
+                <p style='color:#64748B; font-size: 13px; margin: 2px 0 0 0; font-weight: 500;'>Plataforma Integral de Repuestos</p>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        st.markdown("<hr style='margin: 24px 0; border: none; border-top: 1px solid #E2E8F0;'>", unsafe_allow_html=True)
+
+        with st.form("form_login"):
+            usuario_input = st.text_input("Usuario de acceso")
+            password_input = st.text_input("Contraseña", type="password")
+            st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
+            enviar = st.form_submit_button("Iniciar Sesión", use_container_width=True)
+
+        if enviar:
+            if not usuario_input or not password_input:
+                st.error("Por favor complete usuario y contraseña.")
+            else:
+                try:
+                    auth = AuthService()
+                    datos = auth.login(usuario_input.strip(), password_input)
+                    st.session_state["usuario"] = datos
+                    st.rerun()
+                except AuthError as e:
+                    st.error(str(e))
+
+        st.markdown("</div>", unsafe_allow_html=True)
     # Creamos columnas para centrar la tarjeta de forma milimétrica en cualquier pantalla
     _, col_centro, _ = st.columns([1, 1.2, 1])
     
