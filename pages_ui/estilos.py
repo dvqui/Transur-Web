@@ -1,4 +1,4 @@
-"""CSS institucional inyectado en la app (paleta azul/blanco/rojo/celeste)."""
+"""CSS institucional inyectado en la app (paleta azul/blanco/rojo/celeste con tipografía moderna)."""
 import streamlit as st
 from config import COLORS
 
@@ -7,16 +7,25 @@ def inyectar_estilos():
     st.markdown(
         f"""
         <style>
+        /* Importar tipografía moderna de Google Fonts (Plus Jakarta Sans) */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
         #MainMenu {{visibility: hidden;}}
         footer {{visibility: hidden;}}
         header {{visibility: hidden;}}
 
         .stApp {{
             background-color: {COLORS['gris_fondo']};
+            font-family: 'Plus Jakarta Sans', sans-serif, -apple-system;
+        }}
+
+        /* Forzar tipografía en todos los elementos de texto */
+        html, body, [class*="css"] {{
+            font-family: 'Plus Jakarta Sans', sans-serif, -apple-system;
         }}
 
         /* ==========================================================
-           1. SIDEBAR PROFESIONAL (Estilo Panel de Control SaaS)
+           1. SIDEBAR PROFESIONAL
            ========================================================== */
         section[data-testid="stSidebar"] {{
             background: linear-gradient(180deg, {COLORS['azul_profundo']} 0%, #061E38 100%);
@@ -25,8 +34,6 @@ def inyectar_estilos():
         section[data-testid="stSidebar"] * {{
             color: {COLORS['blanco']} !important;
         }}
-        
-        /* Botones exclusivos de la barra lateral (Navegación limpia) */
         section[data-testid="stSidebar"] div.stButton > button {{
             background-color: transparent !important;
             color: {COLORS['blanco']} !important;
@@ -35,7 +42,6 @@ def inyectar_estilos():
             font-weight: 500 !important;
             border-radius: 8px !important;
             padding: 0.6rem 1rem !important;
-            box-shadow: none !important;
             transition: all 0.2s ease-in-out;
         }}
         section[data-testid="stSidebar"] div.stButton > button:hover {{
@@ -44,7 +50,7 @@ def inyectar_estilos():
         }}
 
         /* ==========================================================
-           2. BOTONES GENERALES DE LA APLICACIÓN (Fuera del Sidebar)
+           2. BOTONES GENERALES
            ========================================================== */
         .stMainBlockContainer div.stButton > button, 
         .stMainBlockContainer div.stDownloadButton > button, 
@@ -54,7 +60,7 @@ def inyectar_estilos():
             border-radius: 10px !important;
             border: none !important;
             font-weight: 600 !important;
-            padding: 0.6rem 1.2rem !important;
+            padding: 0.65rem 1.2rem !important;
             box-shadow: 0 4px 12px rgba(11, 61, 102, 0.2) !important;
             transition: all 0.25s ease !important;
         }}
@@ -76,7 +82,7 @@ def inyectar_estilos():
         }}
 
         /* ==========================================================
-           3. TARJETAS Y CONTENEDORES CORPORATIVOS
+           3. CAMPOS DE ENTRADA Y TARJETAS
            ========================================================== */
         .transur-card {{
             background-color: {COLORS['blanco']};
@@ -86,14 +92,13 @@ def inyectar_estilos():
             border: 1px solid rgba(0, 0, 0, 0.04);
         }}
 
-        /* Campos de entrada modernos */
         .stTextInput input, .stNumberInput input, .stTextArea textarea {{
             background-color: #F9FAFB !important;
             color: {COLORS['texto_oscuro']} !important;
             border: 1px solid #D1D5DB !important;
             border-radius: 10px !important;
             padding: 12px !important;
-            transition: all 0.2s ease !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
         }}
         .stTextInput input:focus, .stNumberInput input:focus {{
             border-color: {COLORS['celeste']} !important;
@@ -101,10 +106,8 @@ def inyectar_estilos():
             background-color: #FFFFFF !important;
         }}
 
-        /* Tipografía general */
         .stApp label, .stApp p, .stApp span, .stApp .stMarkdown {{
             color: {COLORS['texto_oscuro']};
-            font-family: 'Segoe UI', -apple-system, sans-serif;
         }}
         </style>
         """,
@@ -113,7 +116,6 @@ def inyectar_estilos():
 
 
 def banner_institucional(subtitulo: str = "Sistema de Gestión de Repuestos"):
-    """Franja superior elegante y limpia."""
     st.markdown(
         f"""
         <div style="
