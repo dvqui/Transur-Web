@@ -10,7 +10,8 @@ from services.auth_service import AuthService, AuthError
 from pages_ui.estilos import inyectar_estilos, banner_institucional
 from pages_ui import dashboard, inventario, usuarios, ventas, pagos, reportes
 
-st.set_page_config(page_title=APP_NAME, page_icon="🚌", layout="wide")
+# Forzamos la barra lateral a iniciar expandida para que nunca desaparezca sola
+st.set_page_config(page_title=APP_NAME, page_icon="🚌", layout="wide", initial_sidebar_state="expanded")
 inyectar_estilos()
 
 # --- Inicializa el esquema y datos base en Neon (una sola vez) -----------------
@@ -54,7 +55,7 @@ def _dialogo_cambiar_password(obligatorio=False):
 
 
 def _pantalla_login():
-    # Fondo con gradiente profesional y sin textos duplicados ni logos
+    # Fondo con gradiente profesional y tarjeta centrada limpia
     st.markdown(
         f"""
         <style>
@@ -152,6 +153,7 @@ def main():
         _pantalla_login()
         return
 
+    # Renderizamos la barra lateral fija al estar logueado
     _sidebar()
     banner_institucional()
 
